@@ -1,0 +1,91 @@
+Drop Table Drivers CASCADE;
+Create table Drivers (
+  DriverID SERIAL PRIMARY KEY,
+  FirstName VARCHAR,
+  LastName VARCHAR,
+  HireDate date
+);
+
+Drop Table Customer CASCADE;
+Create table Customer (
+  CustID SERIAL PRIMARY KEY,
+  CustName VARCHAR
+);
+
+Drop Table Orders CASCADE;
+Create table Orders (
+  OrderID SERIAL PRIMARY KEY,
+  CustID SERIAL references Customer,
+  DriverID SERIAL references Drivers,
+  OrderDate date,
+  InvoiceAmount integer,
+  PayAmount integer
+);
+
+INSERT INTO Drivers (FirstName, LastName, HireDate) Values (
+  'Steve', 'Spurrier', date '1991-01-01' ),(
+    'Danny', 'Wuerffel', date '1994-03-11' ),(
+      'Timmy', 'Tebow', date '2005-04-15'
+    ) ;
+
+    SELECT * FROM DRIVERS;
+
+    INSERT INTO Customer (CustName) Values (
+      'Georgia'),('Tennessee'),('Alabama'),('Florida State'),('LSU'
+);
+
+Select * FROM Customer;
+
+INSERT INTO Orders (DriverID, CustID, OrderDate,InvoiceAmount,PayAmount) Values (
+  '1','1',date '1992-02-01','300','40'),(
+  '1','1',date '2022-12-26','600','100'),(
+  '1','2',date '2022-12-26','200','60'),(
+  '1','3',date '2022-12-26','1000','500'),(
+  '1','4',date '2022-12-26','600','250'),(
+  '1','5',date '2022-12-26','300','125'),(
+  '2','1',date '1999-12-26','200','100'),(
+  '2','1',date '2022-12-26','500','200'),(
+  '2','2',date '2022-12-26','800','300'),(
+  '2','3',date '2022-12-26','1000','500'),(
+  '2','4',date '2022-12-26','400','100'),(
+  '2','5',date '2022-12-26','600','300'),(
+  '3','1',date '1999-12-26','200','100'),(
+  '3','1',date '2022-12-26','500','200'),(
+  '3','2',date '2022-12-26','800','300'),(
+  '3','3',date '2022-12-26','1000','500'),(
+  '3','4',date '2022-12-26','400','100'),(
+  '3','5',date '2022-12-26','600','300'),(
+  '1','1',date '1992-01-01','300','40'),(
+  '1','1',date '2023-01-01','600','100'),(
+  '1','2',date '2023-01-02','200','60'),(
+  '1','3',date '2023-01-02','1000','500'),(
+  '1','4',date '2023-01-02','600','250'),(
+  '1','5',date '2023-01-02','300','125'),(
+  '2','1',date '1999-01-01','200','100'),(
+  '2','1',date '2023-01-01','500','200'),(
+  '2','2',date '2023-01-01','800','300'),(
+  '2','3',date '2023-01-01','1000','500'),(
+  '2','4',date '2023-01-01','400','100'),(
+  '2','5',date '2023-01-02','600','300'),(
+  '3','1',date '1999-01-01','200','100'),(
+  '3','1',date '2023-01-01','500','200'),(
+  '3','2',date '2023-01-01','800','300'),(
+  '3','3',date '2023-01-01','1000','500'),(
+  '3','4',date '2023-01-01','400','100'),(
+  '3','5',date '2023-01-02','600','300');
+
+  SELECT * FROM ORDERS;
+-- Question 1  
+Select o.OrderID, d.DriverID,o.PayAmount FROM Drivers as d INNER JOIN Orders as o on d.DriverID = o.DriverID Where OrderDate BETWEEN '2022-12-25' AND '2022-12-31';
+  
+--Question 2
+SELECT d.DriverID, COUNT(o.OrderID) FROM Orders as o Inner JOIN Drivers as d on o.DriverID =d.DriverID where o.OrderDate BETWEEN '2022-12-28' AND '2023-01-03' Group by d.DriverID;
+
+-- Question 3 
+SELECT o.CustID, COUNT(o.OrderID) FROM Orders as o Inner JOIN Drivers as d on o.DriverID =d.DriverID Where o.OrderDate BETWEEN '2022-12-28' AND '2023-01-03' Group by o.CustID; 
+
+-- Question 4
+SELECT d.DriverID, d.FirstName,d.LastName, Sum(o.PayAmount) as total_PayAMOUNT_LAST_WEEK FROM Drivers as d Inner JOIN Orders as o ON d.DriverID = o.DriverID Where OrderDate BETWEEN '2022-12-25' AND '2022-12-31' Group by d.DriverID, d.FirstName,d.LastName;
+
+--Question 5
+SELECT c.CustID, c.CustName, Sum(o.InvoiceAmount) FROM Customer as c INNER JOIN Orders as o on c.CustID = o.CustID Where o.OrderDate BETWEEN '2022-12-28' AND '2023-01-03' Group by c.CustID, c.CustName;
